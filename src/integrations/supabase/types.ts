@@ -14,7 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      causas_evasao: {
+        Row: {
+          categoria: string
+          created_at: string | null
+          descricao: string
+          id: string
+          ordem: number
+          titulo: string
+        }
+        Insert: {
+          categoria: string
+          created_at?: string | null
+          descricao: string
+          id?: string
+          ordem: number
+          titulo: string
+        }
+        Update: {
+          categoria?: string
+          created_at?: string | null
+          descricao?: string
+          id?: string
+          ordem?: number
+          titulo?: string
+        }
+        Relationships: []
+      }
+      evasao_por_idade: {
+        Row: {
+          ano: number
+          created_at: string | null
+          faixa_etaria: string
+          id: string
+          percentual: number
+          quantidade: number
+        }
+        Insert: {
+          ano?: number
+          created_at?: string | null
+          faixa_etaria: string
+          id?: string
+          percentual: number
+          quantidade: number
+        }
+        Update: {
+          ano?: number
+          created_at?: string | null
+          faixa_etaria?: string
+          id?: string
+          percentual?: number
+          quantidade?: number
+        }
+        Relationships: []
+      }
+      situacao_por_renda: {
+        Row: {
+          ano: number
+          atraso_escolar: number
+          created_at: string | null
+          evadiu_escolar: number
+          faixa_renda: string
+          frequenta_serie_esperada: number
+          id: string
+        }
+        Insert: {
+          ano?: number
+          atraso_escolar: number
+          created_at?: string | null
+          evadiu_escolar: number
+          faixa_renda: string
+          frequenta_serie_esperada: number
+          id?: string
+        }
+        Update: {
+          ano?: number
+          atraso_escolar?: number
+          created_at?: string | null
+          evadiu_escolar?: number
+          faixa_renda?: string
+          frequenta_serie_esperada?: number
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
