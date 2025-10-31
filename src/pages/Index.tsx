@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { AlertTriangle, BarChart3, BookOpen, TrendingDown } from "lucide-react";
+import { useEvasaoData } from "@/hooks/useEvasaoData";
 
 const Index = () => {
+  const { data } = useEvasaoData();
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -99,77 +101,18 @@ const Index = () => {
           </h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-destructive">Distorção Idade-Série</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  O atraso escolar, caracterizado pela defasagem entre idade e série esperada, 
-                  é um dos principais fatores de desmotivação dos estudantes, levando ao abandono.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-secondary">Baixo Aprendizado</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Dificuldades em acompanhar os conteúdos escolares e a falta de suporte pedagógico 
-                  adequado contribuem significativamente para o desinteresse dos alunos.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-primary">Desigualdade Socioeconômica</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Famílias de baixa renda frequentemente enfrentam a necessidade de inserir jovens 
-                  no mercado de trabalho precocemente, comprometendo a continuidade dos estudos.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-accent">Falta de Orientação</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  A ausência de orientação vocacional e desconhecimento sobre as possibilidades 
-                  de carreira fazem com que muitos jovens não vejam sentido em continuar estudando.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-destructive">Baixo Engajamento</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  A falta de conexão entre os conteúdos escolares e a realidade dos alunos, 
-                  aliada a metodologias pouco atrativas, reduz o interesse pelos estudos.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-secondary">Baixa Qualidade do Ensino</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Escolas com infraestrutura precária, professores sobrecarregados e falta de 
-                  recursos pedagógicos contribuem para a baixa qualidade da educação oferecida.
-                </p>
-              </CardContent>
-            </Card>
+            {data?.causas.map((causa) => (
+              <Card key={causa.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className={`text-${causa.categoria}`}>{causa.titulo}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    {causa.descricao}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
 

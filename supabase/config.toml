@@ -1,1 +1,4 @@
 project_id = "rfugwrfikggnajsxwaac"
+
+[functions.get-evasao-dados]
+verify_jwt = false

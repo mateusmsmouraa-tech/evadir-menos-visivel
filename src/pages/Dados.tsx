@@ -1,21 +1,49 @@
 import Header from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
+import { useEvasaoData } from "@/hooks/useEvasaoData";
+import { Loader2 } from "lucide-react";
 
 const Dados = () => {
-  // Dados baseados nas imagens fornecidas
-  const idadeData = [
-    { name: "4 a 5 anos", value: 394479, color: "hsl(var(--chart-2))" },
-    { name: "6 a 10 anos", value: 22702, color: "hsl(var(--chart-1))" },
-    { name: "11 a 14 anos", value: 59780, color: "hsl(var(--chart-3))" },
-    { name: "15 a 17 anos", value: 625531, color: "hsl(var(--chart-4))" }
-  ];
+  const { data, isLoading, error } = useEvasaoData();
 
-  const situacaoData = [
-    { faixa: "Até 20%", escolar: 11.8, atraso: 35.6, frequenta: 54.6 },
-    { faixa: "Mais de 20% até 40%", escolar: 8.0, atraso: 33.3, frequenta: 69.5 },
-    { faixa: "Mais de 40% até 60%", escolar: 7.0, atraso: 30.1, frequenta: 70.0 }
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center text-destructive">
+            Erro ao carregar os dados. Por favor, tente novamente.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Transformar dados para os gráficos
+  const idadeData = data.evasaoPorIdade.map(item => ({
+    name: item.faixa_etaria,
+    value: item.quantidade,
+    color: "hsl(var(--chart-1))"
+  }));
+
+  const situacaoData = data.situacaoPorRenda.map(item => ({
+    faixa: item.faixa_renda,
+    escolar: item.evadiu_escolar,
+    atraso: item.atraso_escolar,
+    frequenta: item.frequenta_serie_esperada
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,34 +115,26 @@ const Dados = () => {
           </Card>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Principais Causas da Evasão</CardTitle>
-            <CardDescription>Fatores que contribuem para o abandono escolar</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-lg mb-2 text-destructive">Desigualdade Social</h3>
-                <p className="text-sm text-muted-foreground">
-                  Famílias de baixa renda têm maior taxa de evasão devido à necessidade de trabalho precoce.
-                </p>
+          <Card>
+            <CardHeader>
+              <CardTitle>Principais Causas da Evasão</CardTitle>
+              <CardDescription>Fatores que contribuem para o abandono escolar</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-4">
+                {data.causas.slice(0, 3).map((causa) => (
+                  <div key={causa.id} className="p-4 border rounded-lg">
+                    <h3 className={`font-semibold text-lg mb-2 text-${causa.categoria}`}>
+                      {causa.titulo}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {causa.descricao}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-lg mb-2 text-secondary">Baixo Aprendizado</h3>
-                <p className="text-sm text-muted-foreground">
-                  Dificuldades no acompanhamento das aulas levam à desmotivação e abandono.
-                </p>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-lg mb-2 text-primary">Falta de Orientação</h3>
-                <p className="text-sm text-muted-foreground">
-                  Ausência de suporte sobre carreiras e importância da educação para o futuro.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
       </main>
     </div>
   );
